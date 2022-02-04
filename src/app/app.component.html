@@ -1,0 +1,52 @@
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+
+            <hr>
+
+            <h4>Server Side DataTable Using Ngx Pagination</h4>
+
+            <hr>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <td>SNo</td>
+                        <td>Full Name</td>
+                        <td>Phone</td>
+                        <td>EmailId</td>
+                        <td>PostalZip</td>
+                        <td>Region</td>
+                        <td>Country</td>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let item of userDataList | paginate : { itemsPerPage : pageSize , currentPage : page, totalItems: totalItems }">
+
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.fullName }}</td>
+                        <td>{{ item.phone }}</td>
+                        <td>{{ item.postalZip }}</td>
+                        <td>{{ item.emailId }}</td>
+                        <td>{{ item.region }}</td>
+                        <td>{{ item.country }}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+            <pagination-controls class="float-right" (pageChange)="nextPage((page = $event))" ></pagination-controls> 
+        </div>
+
+        
+    </div>
+
+</div>
