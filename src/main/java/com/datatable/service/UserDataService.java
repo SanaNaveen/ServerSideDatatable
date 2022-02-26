@@ -7,4 +7,6 @@ import com.datatable.dto.UserDataDto;
 public interface UserDataService {
 
 	public ResponseData getAllUserData(PaginationDto paginationDto);
+	
+	public ResponseData searchData(UserDataDto userDataDto);
 }

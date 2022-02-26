@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datatable.dto.PaginationDto;
 import com.datatable.dto.ResponseData;
+import com.datatable.dto.UserDataDto;
 import com.datatable.service.UserDataService;
 
 @RestController
@@ -27,5 +28,13 @@ public class UserController {
 		ResponseData responseData = userDataService.getAllUserData(paginationDto);
 		
 		return new ResponseEntity<ResponseData>(responseData,HttpStatus.OK);
+	}
+	
+	@PostMapping(value ="/searchData")
+	public ResponseEntity<?> searchData(@RequestBody UserDataDto userDataDto){
+		
+		ResponseData responseData = userDataService.searchData(userDataDto);
+		
+		return new ResponseEntity<ResponseData>(responseData,HttpStatus.OK); 
 	}
 }
