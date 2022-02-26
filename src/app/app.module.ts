@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -16,6 +17,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     BrowserModule,
     HttpClientModule,
     NgxPaginationModule,
+    FormsModule,
+    ReactiveFormsModule
     
  
   ],

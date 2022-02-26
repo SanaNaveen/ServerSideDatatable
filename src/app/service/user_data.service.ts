@@ -16,4 +16,7 @@ export class UserDataService {
         return this.http.post(this.baseUrl+'/getAllUserData',req);
     }
 
+    searchData(req : any) : Observable<any>{
+        return this.http.post(this.baseUrl + "/searchData",req);
+    }
 }

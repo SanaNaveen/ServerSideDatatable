@@ -1,7 +1,7 @@
 <div class="container">
 
-
     <div class="row">
+
         <div class="col-md-12 col-lg-12 col-sm-12">
 
             <hr>
@@ -10,13 +10,57 @@
 
             <hr>
 
-            <table class="table">
+            <form [formGroup]="searchForm" (ngSubmit)="searchData()">
+
+                <div class="row">
+                    <div class="col-md-3 col-lg-3 col-sm-12">
+
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control"  placeholder="Enter Full Name" formControlName="fullName">
+    
+                    </div>
+            
+                    <div class="col-md-3 col-lg-3 col-sm-12 ">
+
+                        <label for="emailId">Email Id</label>
+                        <input type="text" class="form-control"  placeholder="Enter Email Id" formControlName="emailId">
+    
+                    </div>
+                
+                    <div class="col-md-3 col-lg-3 col-sm-12">
+
+                        <label for="country">Country</label>
+                        <input type="text" class="form-control"  placeholder="Enter Country" formControlName="country">
+    
+                    </div>
+
+                    <button class="btn-sm btn-primary mr-2" type="submit">Find</button>
+                    <button class="btn-sm btn-warning mr-2" type="button" (click)="clearData()">Clear</button>
+
+                    
+                </div>
+
+                
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+
+           
+
+           <!-- <table class="table">
 
                 <thead>
 
                     <tr>
 
-                        <td>SNo</td>
+                        <td>User Id</td>
                         <td>Full Name</td>
                         <td>Phone</td>
                         <td>EmailId</td>
@@ -29,20 +73,20 @@
 
                 <tbody>
 
-                    <tr *ngFor="let item of userDataList | paginate : { itemsPerPage : pageSize , currentPage : page, totalItems: totalItems }">
+                    <tr *ngFor="let item of userDataList | paginate : { itemsPerPage : pageSize , currentPage : page, totalItems: totalItems };let i= index">
 
                         <td>{{ item.id }}</td>
                         <td>{{ item.fullName }}</td>
                         <td>{{ item.phone }}</td>
-                        <td>{{ item.postalZip }}</td>
                         <td>{{ item.emailId }}</td>
+                        <td>{{ item.postalZip }}</td>
                         <td>{{ item.region }}</td>
                         <td>{{ item.country }}</td>
                     </tr>
 
-                </tbody>
+                </tbody> 
 
-            </table>
+            </table> -->
             <pagination-controls class="float-right" (pageChange)="nextPage((page = $event))" ></pagination-controls> 
         </div>
 

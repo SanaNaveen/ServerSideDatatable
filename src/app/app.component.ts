@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserDataService } from './service/user_data.service';
 
 @Component({
@@ -9,18 +10,28 @@ import { UserDataService } from './service/user_data.service';
 export class AppComponent implements OnInit{
   title = 'ServerSideDataTableUI';
 
+  searchForm !:  FormGroup ;
+
   page = 1;
-  pageSize = 5;
+  pageSize = 15;
   totalItems : any;
   userDataList : any[] =[];
 
-
+  
 
   filter = '';
-  constructor(private userDataService : UserDataService) {}
+  constructor(private userDataService : UserDataService,private fb : FormBuilder) {}
 
   ngOnInit(): void {
       this.getUserData();
+
+      this.searchForm = this.fb.group({
+
+        'fullName' :[null],
+        'emailId' :[null],
+        'country' :[null]
+
+      });
   }
 
 
@@ -58,5 +69,29 @@ export class AppComponent implements OnInit{
 
   }
 
+  searchData(){
+
+    this.userDataList = [];
+    this.userDataService.searchData(this.searchForm.value).subscribe((data) => {
+
+      this.userDataList = data.responseList;
+
+      this.totalItems = data.responseList.totalElements-1;
+    })
+
+  }
+
+  clearData(){
+
+    this.userDataList = [];
+
+    this.getUserData();
+
+    this.searchForm.reset();
+
+  }
+
  
+
+  
 }
