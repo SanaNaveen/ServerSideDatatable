@@ -5,12 +5,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatatableComponent } from './datatable/datatable.component';
+import { DataTablesModule } from 'angular-datatables';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    DatatableComponent,
     
   ],
   imports: [
@@ -18,7 +21,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DataTablesModule
+    
     
  
   ],

@@ -23,7 +23,7 @@ export class AppComponent implements OnInit{
   constructor(private userDataService : UserDataService,private fb : FormBuilder) {}
 
   ngOnInit(): void {
-      this.getUserData();
+     // this.getUserData();
 
       this.searchForm = this.fb.group({
 
@@ -35,61 +35,7 @@ export class AppComponent implements OnInit{
   }
 
 
-  getUserData(){
 
-    let req= {
-      "pageNo":this.page,
-	    "pageSize":this.pageSize,
-	    "sortBy":"fullName"
-    }
-
-    this.userDataService.getUserData(req).subscribe((data) => {
-
-      this.userDataList = data.responseList.content;
-
-      this.totalItems = data.responseList.totalElements-1;
-    });
-
-  }
-
-  nextPage(page : any){
-
-    let req= {
-      "pageNo":page,
-	    "pageSize":this.pageSize,
-	    "sortBy":"fullName"
-    }
-
-    this.userDataService.getUserData(req).subscribe((data) => {
-
-      this.userDataList = data.responseList.content;
-
-      this.totalItems = data.responseList.totalElements-1;
-    });
-
-  }
-
-  searchData(){
-
-    this.userDataList = [];
-    this.userDataService.searchData(this.searchForm.value).subscribe((data) => {
-
-      this.userDataList = data.responseList;
-
-      this.totalItems = data.responseList.totalElements-1;
-    })
-
-  }
-
-  clearData(){
-
-    this.userDataList = [];
-
-    this.getUserData();
-
-    this.searchForm.reset();
-
-  }
 
  
 

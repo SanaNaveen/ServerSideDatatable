@@ -3,6 +3,14 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 
+
+class DataTablesResponse {
+    data!: any[];
+    draw!: number;
+    recordsFiltered!: number;
+    recordsTotal!: number;
+  }
+
 @Injectable({
     providedIn:'root'
 })
@@ -13,7 +21,7 @@ export class UserDataService {
     baseUrl = environment.baseUrl;
 
     getUserData(req : any) : Observable<any>{
-        return this.http.post(this.baseUrl+'/getAllUserData',req);
+        return this.http.post<DataTablesResponse>(this.baseUrl+'/getAllUserData',req);
     }
 
     searchData(req : any) : Observable<any>{
