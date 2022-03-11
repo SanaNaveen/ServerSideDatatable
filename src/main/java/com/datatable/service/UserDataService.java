@@ -8,5 +8,7 @@ public interface UserDataService {
 
 	public ResponseData getAllUserData(PaginationDto paginationDto);
 	
+	public ResponseData paginationSearchData(PaginationDto paginationDto);
+	
 	public ResponseData searchData(UserDataDto userDataDto);
 }

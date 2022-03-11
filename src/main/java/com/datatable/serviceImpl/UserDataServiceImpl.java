@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.datatable.Entites.UserData;
+import com.datatable.dto.DataTable;
 import com.datatable.dto.PaginationDto;
 import com.datatable.dto.ResponseData;
 import com.datatable.dto.UserDataDto;
@@ -38,22 +39,119 @@ public class UserDataServiceImpl implements UserDataService{
 	public ResponseData getAllUserData(PaginationDto paginationDto) {
 		
 		ResponseData responseData = new ResponseData<>();
+		
+		String sortByName ="id";
+		String sortByOrder = "asc";
 
 		try {
 			
-			Pageable pageable = PageRequest.of(paginationDto.getPageNo(),
-					paginationDto.getPageSize(),Sort.by(paginationDto.getSortBy()));
+			int page = paginationDto.getStart() / paginationDto.getLength();
 			
-			Page<UserData> userDatas = userDataRepository.findAll(pageable);
+			for(int i=0;i < paginationDto.getOrder().size();i++) {
+				
+				if(null != paginationDto.getColumns().get(i).getData()) {				
+					sortByOrder =paginationDto.getOrder().get(i).getDir();
+					sortByName = paginationDto.getColumns().get(Integer.parseInt(paginationDto.getOrder().get(i).getColumn())).getData();
+				}
+				
+			}
+			
+			Pageable pageable = null;
+			
+			if(sortByOrder.equalsIgnoreCase("desc")) {
+				pageable = PageRequest.of(page,paginationDto.getLength(),Sort.by(sortByName).descending());
+			}else {
+				pageable = PageRequest.of(page,paginationDto.getLength(),Sort.by(sortByName).ascending());
+			}
+			
+			Page<UserData> userDatas = null;
 		
+			if(null != paginationDto.getSearch().getValue() && !paginationDto.getSearch().getValue().isEmpty()) {
+				String search =paginationDto.getSearch().getValue();
+				userDatas = userDataRepository.findByFullNameContainingIgnoreCaseOrPhoneContainingIgnoreCaseOrPostalZipContainingIgnoreCaseOrEmailIdContainingIgnoreCaseOrRegionContainingIgnoreCaseOrCountryContainingIgnoreCase(search,search,search,search,search,search,pageable);
+			}else {
+				userDatas= userDataRepository.findAll(pageable);
+			}
 			
-			responseData.setResponseList(userDatas);
+			
+			DataTable dataTable = new DataTable<>();
+			
+			dataTable.setData(userDatas.getContent());
+		    dataTable.setRecordsTotal(userDatas.getTotalElements());
+		    dataTable.setRecordsFiltered(userDatas.getTotalElements());
+
+		    dataTable.setDraw(paginationDto.getDraw());
+		    dataTable.setStart(paginationDto.getStart());
+			
+			responseData.setResponseList(dataTable);
 			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("UserDataServiceImpl :: getAllUserData -> Error : "+e);
 		}
+		return responseData;
+	}
+	
+	
+	@Override
+	public ResponseData paginationSearchData(PaginationDto paginationDto) {
+		
+		ResponseData responseData = new ResponseData();
+		
+		try {
+			
+			
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<UserData> criteriaQuery = criteriaBuilder.createQuery(UserData.class);
+			Root<UserData> root = criteriaQuery.from(UserData.class);
+			
+			Predicate predicate = null;
+			
+			if(null != paginationDto.getFullName() && !paginationDto.getFullName().isEmpty()) {
+				predicate = criteriaBuilder.equal(root.get("fullName"),paginationDto.getFullName());
+			}
+			if(null != paginationDto.getEmailId() && !paginationDto.getEmailId().isEmpty()) {
+				predicate = criteriaBuilder.equal(root.get("emailId"),paginationDto.getEmailId());
+			}
+			
+			if(null != paginationDto.getCountry() && !paginationDto.getCountry().isEmpty()) {
+				predicate = criteriaBuilder.equal(root.get("country"),paginationDto.getCountry());
+			}
+			
+			criteriaQuery.where(predicate);
+			
+			List<UserData> userDatas = entityManager.createQuery(criteriaQuery).getResultList();
+			
+			//List<UserData> userDatas = entityManager.createQuery(criteriaQuery).setFirstResult((int)pagable).getResultList();
+			
+			
+			DataTable dataTable = new DataTable<>();
+			
+			
+		   
+			
+			responseData.setResponseList(dataTable);
+			
+			
+			if(userDatas.size() > 0) {
+				System.out.println(userDatas.size());
+				
+				dataTable.setData(userDatas);
+				dataTable.setRecordsTotal(userDatas.size());
+				dataTable.setRecordsFiltered(userDatas.size());
+
+				dataTable.setDraw(paginationDto.getDraw());
+				dataTable.setStart(paginationDto.getStart());
+				
+				responseData.setResponseList(dataTable);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("UserDataServiceImpl :: searchData -> Error : "+e);
+		}
+		
 		return responseData;
 	}
 
@@ -63,6 +161,7 @@ public class UserDataServiceImpl implements UserDataService{
 		ResponseData responseData = new ResponseData();
 		
 		try {
+			
 			
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<UserData> criteriaQuery = criteriaBuilder.createQuery(UserData.class);

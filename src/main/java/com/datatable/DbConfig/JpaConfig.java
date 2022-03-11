@@ -33,10 +33,13 @@ public class JpaConfig {
 		//Hikari data source connection
 		
 		HikariConfig hikariConfig = new HikariConfig();
-		//hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
+		hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
 		hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/mockdata");
 		hikariConfig.setUsername("root");
 		hikariConfig.setPassword("root");
+//		hikariConfig.setJdbcUrl("jdbc:mysql://sql6.freemysqlhosting.net:3306/sql6475427");
+//		hikariConfig.setUsername("sql6475427");
+//		hikariConfig.setPassword("khcbzwUpst");
 		hikariConfig.setMaximumPoolSize(20);
 		return new HikariDataSource(hikariConfig);
 	}
