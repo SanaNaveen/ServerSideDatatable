@@ -5,6 +5,7 @@ import java.util.List;
 
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -101,6 +103,30 @@ public class UserDataServiceImpl implements UserDataService{
 		
 		try {
 			
+			int page = paginationDto.getStart() / paginationDto.getLength();
+			
+			Pageable pageable = null;
+			
+			String sortByName ="id";
+			String sortByOrder = "asc";
+	
+			
+			for(int i=0;i < paginationDto.getOrder().size();i++) {
+				
+				if(null != paginationDto.getColumns().get(i).getData()) {				
+					sortByOrder =paginationDto.getOrder().get(i).getDir();
+					sortByName = paginationDto.getColumns().get(Integer.parseInt(paginationDto.getOrder().get(i).getColumn())).getData();
+				}
+				
+			}
+			
+			if(sortByOrder.equalsIgnoreCase("desc")) {
+				pageable = PageRequest.of(page,paginationDto.getLength(),Sort.by(sortByName).descending());
+			}else {
+				pageable = PageRequest.of(page,paginationDto.getLength(),Sort.by(sortByName).ascending());
+			}
+			
+		
 			
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<UserData> criteriaQuery = criteriaBuilder.createQuery(UserData.class);
@@ -121,31 +147,34 @@ public class UserDataServiceImpl implements UserDataService{
 			
 			criteriaQuery.where(predicate);
 			
+	
+			
 			List<UserData> userDatas = entityManager.createQuery(criteriaQuery).getResultList();
 			
-			//List<UserData> userDatas = entityManager.createQuery(criteriaQuery).setFirstResult((int)pagable).getResultList();
+			
+			TypedQuery<UserData>  typedQuery = entityManager.createQuery(criteriaQuery);
+			
+			typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+			
+			typedQuery.setMaxResults(pageable.getPageSize());
+			
+			
+			
+			Page<UserData> result = new PageImpl<UserData>(typedQuery.getResultList(),pageable,userDatas.size());
 			
 			
 			DataTable dataTable = new DataTable<>();
 			
-			
-		   
+			dataTable.setData(result.getContent());
+		    dataTable.setRecordsTotal(result.getTotalElements());
+		    dataTable.setRecordsFiltered(result.getTotalElements());
+
+		    dataTable.setDraw(paginationDto.getDraw());
+		    dataTable.setStart(paginationDto.getStart());
 			
 			responseData.setResponseList(dataTable);
 			
 			
-			if(userDatas.size() > 0) {
-				System.out.println(userDatas.size());
-				
-				dataTable.setData(userDatas);
-				dataTable.setRecordsTotal(userDatas.size());
-				dataTable.setRecordsFiltered(userDatas.size());
-
-				dataTable.setDraw(paginationDto.getDraw());
-				dataTable.setStart(paginationDto.getStart());
-				
-				responseData.setResponseList(dataTable);
-			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

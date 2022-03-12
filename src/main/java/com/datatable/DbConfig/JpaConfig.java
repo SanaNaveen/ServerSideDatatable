@@ -37,9 +37,9 @@ public class JpaConfig {
 		hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/mockdata");
 		hikariConfig.setUsername("root");
 		hikariConfig.setPassword("root");
-//		hikariConfig.setJdbcUrl("jdbc:mysql://sql6.freemysqlhosting.net:3306/sql6475427");
-//		hikariConfig.setUsername("sql6475427");
-//		hikariConfig.setPassword("khcbzwUpst");
+//		hikariConfig.setJdbcUrl("jdbc:mysql://sql6.freemysqlhosting.net:3306/sql6478525");
+//		hikariConfig.setUsername("sql6478525");
+//		hikariConfig.setPassword("NU9cKdiTCc");
 		hikariConfig.setMaximumPoolSize(20);
 		return new HikariDataSource(hikariConfig);
 	}
